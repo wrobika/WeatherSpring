@@ -1,14 +1,23 @@
 package controller;
 
+
+import org.hibernate.Session;
+import org.hibernate.query.Query;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.stereotype.Controller;
 
-import java.io.InputStream;
-import java.net.HttpURLConnection;
+import java.io.*;
 import java.net.URL;
-import java.util.Arrays;
-import java.util.HashMap;
+import java.nio.charset.Charset;
+import java.sql.Date;
+import java.sql.Time;
+import java.text.SimpleDateFormat;
 import java.util.List;
-import javax.json.*;
+
+import model.*;
+import hibernate.*;
 
 @Controller
 /**
@@ -16,67 +25,123 @@ import javax.json.*;
  */
 public class ApiController
 {
-    private List<String> dataNames = Arrays.asList(
-            "data_pomiaru", "godzina_pomiaru", "temperatura", "predkosc_wiatru", "kierunek_wiatru",
-            "wilgotnosc_wzgledna", "suma_opadu", "cisnienie");
-
     /**
-     * Pobiera dane pogodowe z api IMGW z danego miasta
-     * @param cityName nazwa miasta, z ktorego chcemy wziac dane (z malej litery, bez polskich liter, dwuczlonowe nazwy pisane razem)
-     * @return HashMap z parametrami pogody w danym miescie
-     * @throws Exception
+     * Pobiera dane pogodowe z api IMGW z wszystkich dostepnych miast
+     * i zapisuje do tabeli w bazie
      */
-    public HashMap downloadData(String cityName) throws Exception
+    public void downloadData()
     {
         try
         {
-            URL url = new URL("https://danepubliczne.imgw.pl/api/data/synop/station/" + cityName + "/format/json");
-            HttpURLConnection con = (HttpURLConnection) url.openConnection();
-            con.setRequestMethod("GET");
-            con.setRequestProperty("Accept", "application/json");
+            Session session = HibernateUtil.getSessionFactory().openSession();
 
-            InputStream is = con.getInputStream();
-            JsonReader jsonReader = Json.createReader(is);
-            JsonObject dataObj = jsonReader.readObject();
-
-            HashMap weatherData = new HashMap<String, String>();
-            for (String name: dataNames)
+            JSONArray json = readJsonFromUrl("https://danepubliczne.imgw.pl/api/data/synop/format/json");
+            for(int i =0; i<json.length(); i++)
             {
-                weatherData.put(name, dataObj.getString(name));
-                System.out.println(name + ": " + dataObj.getString(name));
+                JSONObject obj = (JSONObject) json.get(i);
+
+                //ten if- zeby bledow nie wywalalo gdy cos jest nulem
+                if (obj.get("id_stacji") != JSONObject.NULL
+                        && obj.get("stacja") != JSONObject.NULL
+                        && obj.get("godzina_pomiaru") != JSONObject.NULL
+                        && obj.get("data_pomiaru") != JSONObject.NULL)
+                {
+                    //sprawdzamy czy istnieje juz taki wpis w bazie
+                    Query query = session.createQuery("from Measurements where station = :station AND date = :date AND hour = :hour");
+                    query.setParameter("station", obj.getString("stacja"));
+                    query.setParameter("date", java.sql.Date.valueOf(obj.getString("data_pomiaru")));
+
+                    String s = obj.getString("godzina_pomiaru");
+                    SimpleDateFormat sdf = new SimpleDateFormat("H");
+                    long ms = sdf.parse(s).getTime();
+                    Time t = new Time(ms);
+                    query.setParameter("hour", t);
+
+                    List<Measurements> list = query.list();
+                    //jesli lista pusta to znaczy ze nie ma jeszcze takiego wpisu w bazie i mozemy go dodac
+                    if(list.isEmpty())
+                    {
+                        //zapis do bazy
+                        session.beginTransaction();
+
+                        //Add new object
+                        Measurements measurements = new Measurements();
+                        measurements.setStationId(obj.getString("id_stacji"));
+                        measurements.setStation(obj.getString("stacja"));
+                        measurements.setDate(java.sql.Date.valueOf(obj.getString("data_pomiaru")));
+                        measurements.setHour(t);
+
+                        if (obj.get("cisnienie") != JSONObject.NULL)
+                        {
+                            measurements.setPressure(obj.getFloat("cisnienie"));
+                        }
+                        if (obj.get("wilgotnosc_wzgledna") != JSONObject.NULL)
+                        {
+                            measurements.setRelativeHumidity(obj.getFloat("wilgotnosc_wzgledna"));
+                        }
+                        if (obj.get("temperatura") != JSONObject.NULL)
+                        {
+                            measurements.setTemperature(obj.getFloat("temperatura"));
+                        }
+                        if (obj.get("suma_opadu") != JSONObject.NULL)
+                        {
+                            measurements.setTotalRainfall(obj.getDouble("suma_opadu"));
+                        }
+                        if (obj.get("kierunek_wiatru") != JSONObject.NULL)
+                        {
+                            measurements.setWindDirection(obj.getInt("kierunek_wiatru"));
+                        }
+                        if (obj.get("predkosc_wiatru") != JSONObject.NULL)
+                        {
+                            measurements.setWindSpeed(obj.getInt("predkosc_wiatru"));
+                        }
+
+                        //Save in database
+                        session.save(measurements);
+
+                        //Commit the transaction
+                        session.getTransaction().commit();
+                    }
+                }
             }
-
-            jsonReader.close();
-            con.disconnect();
-            return weatherData;
+            session.close();
+            //HibernateUtil.shutdown();
         }
-        catch(Exception e)
+        catch (Exception e)
         {
-            System.out.println(e.getClass());
-            throw e;
+            e.printStackTrace();
         }
+    }
 
-        //Airly
-        //            URL url = new URL("https://airapi.airly.eu/v1/mapPoint/measurements?latitude=50.06&longitude=19.93");
-//            HttpURLConnection con = (HttpURLConnection) url.openConnection();
-//            con.setRequestMethod("GET");
-//            con.setRequestProperty("Content-Type", "application/json");
-//            con.setRequestProperty("Accept", "application/json");
-//            con.setRequestProperty("apikey", "ASvjtvSqUqXBt6cAESJYcdvyN0Ticp5o");
-//
-//            InputStream is = con.getInputStream();
-//            JsonReader jsonReader = Json.createReader(is);
-//            JsonObject obj = jsonReader.readObject();
-//            JsonObject dataObj = obj.getJsonObject("currentMeasurements");
-//
-//            HashMap<String, Double> weatherData = new HashMap<>();
-//            for (String name: dataNames)
-//            {
-//                weatherData.put(name, dataObj.getJsonNumber(name).doubleValue());
-//                System.out.println(name + ": " + dataObj.getJsonNumber(name));
-//            }
-//            jsonReader.close();
-//            con.disconnect();
-//            return weatherData;
+    private static String readAll(Reader rd) throws IOException
+    {
+        StringBuilder sb = new StringBuilder();
+        int cp;
+        while ((cp = rd.read()) != -1)
+        {
+            sb.append((char) cp);
+        }
+        return sb.toString();
+    }
+
+    private static JSONArray readJsonFromUrl(String url) throws IOException
+    {
+        // String s = URLEncoder.encode(url, "UTF-8");
+        // URL url = new URL(s);
+        InputStream is = new URL(url).openStream();
+        JSONArray json = null;
+        try
+        {
+            BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
+            String jsonText = readAll(rd);
+            json = new JSONArray(jsonText);
+        } catch (JSONException e)
+        {
+            e.printStackTrace();
+        } finally
+        {
+            is.close();
+        }
+        return json;
     }
 }

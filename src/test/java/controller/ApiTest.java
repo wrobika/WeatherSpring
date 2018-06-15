@@ -28,25 +28,11 @@ public class ApiTest {
     {
         try
         {
-            assertThat(controller.downloadData("krakow")).isNotNull();
+            controller.downloadData();
         }
         catch(Exception e)
         {
             System.out.println();
-        }
-    }
-
-    @Test(expected = FileNotFoundException.class)
-    public void exceptionWhileDownloadData() throws Exception
-    {
-        try
-        {
-            controller.downloadData("blednanazwa");
-        }
-        catch(Exception e)
-        {
-            System.out.println();
-            throw e;
         }
     }
 }

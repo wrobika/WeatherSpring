@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Pogoda</title>
+</head>
+<body>
+<div class="col-md-2" th:text="${measurements.station}" ></div>
+<div class="col-md-2" th:text="${measurements.date}" ></div>
+<div class="col-md-2" th:text="${measurements.hour}" ></div>
+<div class="col-md-2" th:text="${measurements.pressure}" ></div>
+<div class="col-md-2" th:text="${measurements.temperature}" ></div>
+<div class="col-md-2" th:text="${measurements.windDirection}" ></div>
+
+</body>
+</html>

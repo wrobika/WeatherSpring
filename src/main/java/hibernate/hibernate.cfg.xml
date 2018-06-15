@@ -6,9 +6,9 @@
     <session-factory>
         <property name="connection.url">jdbc:postgresql://149.156.10.195:23450/weather</property>
         <property name="connection.driver_class">org.postgresql.Driver</property>
-        <mapping class="view.Measurements"/>
-        <!-- <property name="connection.username"/> -->
-        <!-- <property name="connection.password"/> -->
+        <property name="connection.username">java</property>
+        <property name="connection.password">Bt1E5%UZ</property>
+        <mapping class="model.Measurements"/>
 
         <!-- DB schema will be updated if needed -->
         <!-- <property name="hbm2ddl.auto">update</property> -->
