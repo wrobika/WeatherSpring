@@ -52,7 +52,7 @@
             <div class="panel panel-default">
                 <img src="https://media1.tenor.com/images/a9b3e91e8db7b177b0e3fa7c67a2ecfa/tenor.gif?itemid=4610991" height="200" th:if="${measurements.temperature > 10}">
                 <img src="https://media.giphy.com/media/3og0IzE0kqD4tLfxBK/source.gif" height="200" th:if="${measurements.windSpeed > 4}">
-                <img src="http://moziru.com/images/rain-clipart-rain-gif-2.gif" height="200" th:if="${measurements.relativeHumidity > 90}">
+                <img src="http://moziru.com/images/rain-clipart-rain-gif-2.gif" height="200" th:if="${measurements.totalRainfall > 5}">
             </div>
         </div>
     </div>
