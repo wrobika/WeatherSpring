@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+
+<html
+        xmlns ="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+    <link href="webjars/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+    <title>Strona startowa</title>
+</head>
+<body>
+
+    <div class="jumbotron text-center">
+        <h1>Witamy!</h1>
+        <p>Strona dla miłośników zjawisk pogodowych takich jak temperatura i wiatr.</p>
+    </div>
+
+    <div class="container">
+        <table class="table table-striped">
+            <caption>Wybierz akcję:</caption>
+            <tbody>
+            <tr>
+                <td>Aby wyświetlić pogodę.</td>
+                <td><a class="btn btn-primary" href="/wybierzPomiar">Wybierz pomiar</a></td>
+            </tr>
+            <tr>
+                <td>Aby wyświetlić pogodę archiwalną.</td>
+                <td><a class="btn btn-primary" href="/wybierzArchiwalnyPomiar">Wybierz pomiar</a></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script src="webjars/jquery/1.9.1/jquery.min.js"></script>
+    <script src="webjars/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+</body>
+</html>

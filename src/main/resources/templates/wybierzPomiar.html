@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+
+<html
+        xmlns:th="http://www.thymeleaf.org"
+        xmlns ="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+    <link href="webjars/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+    <title>Wyświetl pogodę</title>
+</head>
+<body>
+
+    <div class="jumbotron text-center">
+        <h1>Pogoda.</h1>
+        <p>Wybierz stacje, aby wyświetlić pogodę!</p>
+    </div>
+
+    <div class="container">
+        <form name="weatherForm" servletRelativeAction="/DatabaseController/chooseMeasurements" method="POST">
+            <span class="label label-primary">Stacja:</span>
+            <select class="form-control" name="station" id="station">
+                <option value="">Wybierz stacje</option>
+                <option
+                        th:each="station : ${measurementsList}"
+                        th:value="${station}"
+                        th:text="${station}">
+                </option>
+            </select>
+            <input type="submit" value="Wybierz" class="btn btn-primary active">
+        </form>
+        <br><br>
+        <a class="btn btn-primary" href="/">Strona główna</a>
+    </div>
+
+    <script src="webjars/jquery/1.9.1/jquery.min.js"></script>
+    <script src="webjars/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+</body>
+</html>

@@ -1,16 +1,47 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.w3.org/1999/xhtml">
+<html
+        xmlns:th="http://www.w3.org/1999/xhtml"
+        xmlns ="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+    <link href="webjars/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
     <title>Pogoda</title>
 </head>
 <body>
-<div class="col-md-2" th:text="${measurements.station}" ></div>
-<div class="col-md-2" th:text="${measurements.date}" ></div>
-<div class="col-md-2" th:text="${measurements.hour}" ></div>
-<div class="col-md-2" th:text="${measurements.pressure}" ></div>
-<div class="col-md-2" th:text="${measurements.temperature}" ></div>
-<div class="col-md-2" th:text="${measurements.windDirection}" ></div>
+
+    <div class="jumbotron text-center">
+        <h1><div th:text="${measurements.station}" ></div></h1>
+        <p>Dzień:</p>
+        <p th:text="${measurements.date}" ></p>
+        <p>Godzina:</p>
+        <p th:text="${measurements.hour}" ></p>
+    </div>
+
+    <div class="container">
+        <table class="table table-striped">
+            <caption>Wyniki pomiaru dla tej stacji:</caption>
+            <thead>
+                <tr>
+                    <th>Ciśnienie</th>
+                    <th>Temperatura</th>
+                    <th>Kierunek wiatru</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><div th:text="${measurements.pressure}" ></div></td>
+                    <td><div th:text="${measurements.temperature}" ></div></td>
+                    <td><div th:text="${measurements.windDirection}" ></div></td>
+                </tr>
+            </tbody>
+        </table>
+        <br><br>
+        <a class="btn btn-primary" href="/wybierzPomiar">Wybierz pomiar</a>
+    </div>
+
+    <script src="webjars/jquery/1.9.1/jquery.min.js"></script>
+    <script src="webjars/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 
 </body>
 </html>
