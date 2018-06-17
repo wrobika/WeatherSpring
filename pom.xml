@@ -120,7 +120,6 @@
             <version>1.9.1</version>
         </dependency>
         <!-- koniec bootstrapa !-->
-        
     </dependencies>
 
     <properties>

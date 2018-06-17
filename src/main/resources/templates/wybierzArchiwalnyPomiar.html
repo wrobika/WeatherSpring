@@ -9,14 +9,14 @@
     <link href="webjars/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
     <title>Wyświetl pogodę archiwalną</title>
 </head>
-<body>
+<body style="background-image: url('http://bgfons.com/uploads/sky/sky_PNG5498.png'); background-size: cover;">
 
     <div class="jumbotron text-center">
         <h1>Pogoda Archiwalna.</h1>
         <p>Wybierz stacje, datę i godzinę, aby wyświetlić pogodę archiwalną!</p>
     </div>
 
-    <div class="container">
+    <div class="container" style="background-color: rgba(128, 191, 255, 0.5);">
         <form name="weatherForm" servletRelativeAction="/DatabaseController/chooseArchiwalMeasurements" method="POST">
             <span class="label label-primary">Data:</span>
             <input class="form-control" type="date" name="date" id="date"/>
@@ -35,6 +35,7 @@
         </form>
         <br><br>
         <a class="btn btn-primary" href="/">Strona główna</a>
+        <br><br>
     </div>
 
     <script src="webjars/jquery/1.9.1/jquery.min.js"></script>

@@ -1,14 +1,15 @@
 <!DOCTYPE html>
 <html
         xmlns:th="http://www.w3.org/1999/xhtml"
-        xmlns ="http://www.thymeleaf.org">
+        xmlns ="http://www.thymeleaf.org"
+        xmlns:c="http://java.sun.com/jsp/jstl/core">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta name="viewport" content="initial-scale=1, maximum-scale=1">
     <link href="webjars/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
     <title>Pogoda Archiwalna</title>
 </head>
-<body>
+<body style="background-image: url('http://bgfons.com/uploads/sky/sky_PNG5498.png'); background-size: cover;">
 
     <div class="jumbotron text-center">
         <h1><div th:text="${measurements.station}" ></div></h1>
@@ -18,26 +19,42 @@
         <p th:text="${measurements.hour}" ></p>
     </div>
 
-    <div class="container">
+    <div class="container" style="background-color: rgba(128, 191, 255, 0.5);">
         <table class="table table-striped">
             <caption>Wyniki pomiaru dla tej stacji:</caption>
             <thead>
                 <tr>
                     <th>Ciśnienie</th>
                     <th>Temperatura</th>
+                    <th>Prędkość wiatru</th>
                     <th>Kierunek wiatru</th>
+                    <th>Wilgotność</th>
+                    <th>Opady</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
-                    <td><div th:text="${measurements.pressure}" ></div></td>
-                    <td><div th:text="${measurements.temperature}" ></div></td>
-                    <td><div th:text="${measurements.windDirection}" ></div></td>
+                    <td><span th:text="${measurements.pressure}" ></span> hPa</td>
+                    <td><span th:text="${measurements.temperature}" ></span> &#x2103</td>
+                    <td><span th:text="${measurements.windSpeed}" ></span> km/h</td>
+                    <td><span th:text="${measurements.windDirection}" ></span>&#xB0</td>
+                    <td><span th:text="${measurements.relativeHumidity}" ></span>%</td>
+                    <td><span th:text="${measurements.totalRainfall}" ></span> mm</td>
                 </tr>
             </tbody>
         </table>
+
         <br><br>
         <a class="btn btn-primary" href="/wybierzArchiwalnyPomiar">Wybierz archiwalny pomiar</a>
+        <br><br>
+
+        <div class="col-sm-6 col-sm-offset-3">
+            <div class="panel panel-default">
+                <img src="https://media1.tenor.com/images/a9b3e91e8db7b177b0e3fa7c67a2ecfa/tenor.gif?itemid=4610991" height="200" th:if="${measurements.temperature > 10}">
+                <img src="https://media.giphy.com/media/3og0IzE0kqD4tLfxBK/source.gif" height="200" th:if="${measurements.windSpeed > 4}">
+                <img src="http://moziru.com/images/rain-clipart-rain-gif-2.gif" height="200" th:if="${measurements.relativeHumidity > 90}">
+            </div>
+        </div>
     </div>
 
     <script src="webjars/jquery/1.9.1/jquery.min.js"></script>

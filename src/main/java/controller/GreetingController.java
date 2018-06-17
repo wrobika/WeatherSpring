@@ -20,5 +20,4 @@ public class GreetingController {
         modelAndView.setViewName("/index");
         return modelAndView;
     }
-
 }
