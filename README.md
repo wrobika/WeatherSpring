@@ -1,15 +1,9 @@
 # WeatherSpring
-Uruchomienie:  
-src\main\java\controller\Application.java  
-ppm 'Run Application'  
-in web browser:  
-http://localhost:8080/
 
-testy:  
-src\test\java\controller\ApiTest.java 
-ppm 'Run ApiTest' 
+dokumentacja:  
+https://wrobika.github.io/WeatherSpring/  
 
-dane pochodza ze strony:  
- https://danepubliczne.imgw.pl/  
+dane pogodowe pochodza ze strony:  
+https://danepubliczne.imgw.pl/  
 mozliwe miejscowosci:  
 https://danepubliczne.imgw.pl/api/data/synop
