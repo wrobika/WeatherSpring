@@ -1,0 +1,82 @@
+@startuml
+package model  {
+
+  Measurements --* Entity
+  MeasurementsPK --* Serializable
+
+   class Measurements {
+      - String stationId
+      - String station
+      - Date date
+      - Time hour
+      - Float temperature
+      - Integer windSpeed
+      - Integer windDirection
+      - Float relativeHumidity
+      - Double totalRainfall
+      - Float pressure
+
+      ..Akcesory..
+   + String getStationId()
+   + void setStationId(String)
+   + String getStation()
+   + void setStation(String )
+   + Date getDate()
+   + void setDate(Date)
+   + Time getHour()
+   + void setHour(Time )
+   + Float getTemperature()
+   + void setTemperature(Float)
+   + Integer getWindSpeed()
+   + void setWindSpeed(Integer windSpeed)
+   + Integer getWindDirection()
+   + void setWindDirection(Integer)
+   + Float getRelativeHumidity()
+   + void setRelativeHumidity(Float)
+   + Double getTotalRainfall()
+   + void setTotalRainfall(Double)
+   + Float getPressure()
+   + void setPressure(Float)
+  ..Operator..
+  + boolean equals(Object o)
+  + int hashCode()
+}
+
+ class MeasurementsPK {
+   - String stationId
+   - Date date
+   - Time hour
+   ..Akcesory..
+   + String getStationId()
+   + void setStationId(String)
+   + Date getDate()
+   + void setDate(Date date)
+   + Time getHour()
+   + void setHour(Time hour)
+  ..Operator..
+   + boolean equals(Object o)
+   + int hashCode()
+
+ }
+
+}
+package controller {
+  apiController --* Controller
+  DatabaseController --* Controller
+  class apiController{
+    + void downloadData()
+    - String readAll(Reader)
+    - JSONArray readJsonFromUrl(String)
+  }
+  class DatabaseController{
+    + ModelAndView readMeasurements(String, Date, Time)
+    + ModelAndView readMeasurements(String)
+    + ModelAndView chooseArchiwalMeasurements()
+    + ModelAndView chooseMeasurements()
+    + ModelAndView chooseArchiwalMeasurements(HttpServletRequest)
+    + ModelAndView chooseMeasurements(HttpServletRequest)
+
+
+  }
+}
+@enduml
